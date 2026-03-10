@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-&p_!5624$jl*#doic&4nq9n4#!rvj@4e+h4f2vy9e89kp5wqfu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['miuceo-uz.onrender.com']
+ALLOWED_HOSTS = [
+    "muhammadjon-uz.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 
 # Application definition
@@ -120,7 +124,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static_global', # Example of a project-level static directory
+    BASE_DIR / "static"
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles_production' # Directory for 'collectstatic'
