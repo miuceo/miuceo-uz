@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-&p_!5624$jl*#doic&4nq9n4#!rvj@4e+h4f2vy9e89kp5wqfu
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    "*",
     "muhammadjon-uz.onrender.com",
     "localhost",
     "127.0.0.1"
@@ -121,7 +122,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static"
