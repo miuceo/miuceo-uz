@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Loyihalar - Mening Portfoliom{% endblock %}
+
+{% block content %}
+<style>
+    /* Loyihalar sahifasi sarlavhasi */
+    .projects-header {
+        margin-bottom: 3.5rem;
+        padding-top: 2rem;
+        text-align: center;
+    }
+
+    .projects-header h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+
+    .projects-header p {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Grid layout: Loyihalar uchun 2 ustunli keng to'r */
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+    }
+
+    /* Loyiha kartochkasi dizayni */
+    .project-card {
+        background-color: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 32px rgba(0,0,0,0.06);
+    }
+
+    /* Rasm Slayderi (Karusel) uslublari - Loyihalar uchun kengroq */
+    .slider-container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        background-color: #f0f0f0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .slider-wrapper {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none; 
+        -ms-overflow-style: none;
+        scroll-behavior: smooth;
+    }
+
+    .slider-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .slide-img {
+        flex: 0 0 100%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center; /* Vebsaytlar uchun asosan tepa qismi muhim */
+        scroll-snap-align: start;
+        background-color: #f5f5f5;
+        display: block;
+    }
+
+    /* Slayder tugmalari */
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--border-color);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: var(--text-color);
+        transition: all 0.2s ease;
+        z-index: 10;
+        opacity: 0;
+    }
+
+    .project-card:hover .slider-btn {
+        opacity: 1;
+    }
+
+    .slider-btn:hover {
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        border-color: var(--text-color);
+    }
+
+    .slider-btn.prev { left: 15px; }
+    .slider-btn.next { right: 15px; }
+
+    /* Loyiha matn qismi */
+    .project-content {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .project-date {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.8rem;
+        display: block;
+    }
+
+    .project-content h2 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+        letter-spacing: -0.5px;
+    }
+
+    .project-content p {
+        color: var(--text-muted);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        flex-grow: 1;
+    }
+
+    /* Havola (Link) qismi */
+    .project-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: auto;
+        flex-wrap: wrap; /* Kichik ekranlarda sig'ishi uchun */
+    }
+
+    /* Asosiy tugma (Saytga o'tish) */
+    .btn-visit {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-visit:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    .btn-visit svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+    }
+
+    /* Ikkilamchi tugma (Batafsil) */
+    .btn-details {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background-color: transparent;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-details:hover {
+        border-color: var(--text-color);
+        transform: translateY(-2px);
+    }
+
+    .btn-details svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    /* Mobil moslashuvchanlik */
+    @media (max-width: 900px) {
+        .projects-grid {
+            grid-template-columns: 1fr;
+        }
+        .projects-header h1 {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+<div class="projects-header">
+    <h1>Mening Loyihalarim</h1>
+    <p>O'tgan vaqt davomida ustida ishlagan web-ilovalarim, amaliy ishlarim va tajribalarim ro'yxati.</p>
+</div>
+
+<div class="projects-grid">
+    <!-- Django ro'yxati -->
+    {% for project in projects %}
+    
+    <article class="project-card">
+        <!-- Rasm slayderi qismi -->
+        <div class="slider-container">
+            <div class="slider-wrapper" id="slider-{{ project.slug }}">
+                
+                <!-- ProjectImages modelidagi 'image' field orqali rasmga ulanish -->
+                {% for proj_img in project.images.all %}
+                    <img src="{{ proj_img.image.url }}" alt="{{ project.title }}" class="slide-img">
+                {% empty %}
+                    <!-- Default rasm (agar bazada rasm yuklanmagan bo'lsa) -->
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Default project cover" class="slide-img">
+                {% endfor %}
+
+            </div>
+            
+            <!-- Slayder tugmalari (faqat 1 tadan ko'p rasm bo'lsagina ko'rinadi) -->
+            {% if project.images.count > 1 %}
+            <button class="slider-btn prev" onclick="scrollSlider('slider-{{ project.slug }}', -1)" aria-label="Oldingi rasm">&#10094;</button>
+            <button class="slider-btn next" onclick="scrollSlider('slider-{{ project.slug }}', 1)" aria-label="Keyingi rasm">&#10095;</button>
+            {% endif %}
+        </div>
+
+        <!-- Loyiha matn qismi -->
+        <div class="project-content">
+            <span class="project-date">Yaratildi: {{ project.created_at|date:"d M, Y" }}</span>
+            
+            <h2>{{ project.title }}</h2>
+            
+            <!-- Qisqa tavsif -->
+            <p>{{ project.description|truncatewords:40 }}</p>
+            
+            <div class="project-actions">
+                <!-- Portfoliodagi batafsil sahifaga (single-project) o'tish tugmasi -->
+                <a href="{% url 'single-project' project.slug %}" class="btn-details">
+                    Batafsil
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+
+                <!-- Loyihaga tashrif buyurish (Yangi oynada ochiladi) -->
+                {% if project.link %}
+                <a href="{{ project.link }}" target="_blank" rel="noopener noreferrer" class="btn-visit">
+                    Saytga o'tish
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+
+    {% empty %}
+        <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 4rem;">Hozircha loyihalar qo'shilmagan.</p>
+    {% endfor %}
+</div>
+
+<!-- Slayderni boshqarish -->
+<script>
+    function scrollSlider(sliderId, direction) {
+        const slider = document.getElementById(sliderId);
+        if (slider) {
+            const scrollAmount = slider.offsetWidth;
+            slider.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+    }
+</script>
+{% endblock %}
