@@ -11,7 +11,7 @@ class PostAdmin(admin.ModelAdmin):
     
 @admin.register(PostImages)
 class PostImagesAdmin(admin.ModelAdmin):
-    list_display = ('post', 'image')
+    list_display = ('post', 'link')
     search_fields = ('post__title',)
     
 @admin.register(Comment)
@@ -29,5 +29,5 @@ class ProjectsAdmin(admin.ModelAdmin):
 
 @admin.register(ProjectImages)
 class ProjectImagesAdmin(admin.ModelAdmin):
-    list_display = ('project', 'image')
+    list_display = ('project', 'link')
     search_fields = ('project__title',)    

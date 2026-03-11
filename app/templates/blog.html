@@ -240,7 +240,7 @@
                 <!-- post.images.all orqali PostImages modeliga murojaat qilish -->
                 {% for image in post.images.all %}
                     <!-- PostImages modelidagi 'image' field orqali rasm URL iga ulanish -->
-                    <img src="{{ image.image.url }}" alt="{{ post.title }}" class="slide-img">
+                    <img src="{{ image.link }}" alt="{{ post.title }}" class="slide-img">
                 {% empty %}
                     <!-- Agar postda rasm yuklanmagan bo'lsa, xavfsizlik uchun default rasm -->
                     <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80" alt="Default cover" class="slide-img">

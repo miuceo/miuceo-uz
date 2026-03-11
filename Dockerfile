@@ -14,4 +14,7 @@ RUN pip install --upgrade pip && \
 
 COPY . /app/
 
-CMD ["python", "app/manage.py", "runserver", "0.0.0.0:8000"]
+# static fayllarni yig‘ish
+RUN python app/manage.py collectstatic --noinput
+
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]

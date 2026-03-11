@@ -34,7 +34,7 @@ class Post(models.Model):
         
 class PostImages(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='post_images/')
+    link = models.URLField()
     
     def __str__(self):
         return f"Image for {self.post.title}"
@@ -90,7 +90,7 @@ class Projects(models.Model):
 
 class ProjectImages(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='project_images/')
+    link = models.URLField()
     
     def __str__(self):
         return f"Image for {self.project.title}"
